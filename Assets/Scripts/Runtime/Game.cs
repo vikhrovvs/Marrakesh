@@ -130,11 +130,20 @@ public class Game : MonoBehaviourPunCallbacks
         return m_GridHolder.CarpetColor;
     }
 
+
+    public Tuple<Vector2Int, Vector2Int> GetSelectedNodesCoordinates()
+    {
+        return m_GridHolder.GetSelectedNodesCoordinates();
+    }
+
     [PunRPC]
-    public void SpawnCarpet(int playerNumber)
+    public void SpawnCarpet(int playerNumber, int firstNodeX, int firstNodeY, int secondNodeX, int secondNodeY)
     {
         int carpetIdx = playerNumber - 1;
-        m_GridHolder.SpawnCarpet(carpetIdx);
+        Vector2Int firstNodeCoordinates = new Vector2Int(firstNodeX, firstNodeY);
+        Vector2Int secondNodeCoordinates = new Vector2Int(secondNodeX, secondNodeY);
+
+        m_GridHolder.SpawnCarpet(carpetIdx, firstNodeCoordinates, secondNodeCoordinates);
     }
 
     public void EndCarpetPlacement()

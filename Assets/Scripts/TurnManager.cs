@@ -1,7 +1,9 @@
- using UnityEngine;
+using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
+using System;
+using System.Collections;
 
 
 public enum TurnPhase
@@ -51,7 +53,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("starting");
         Debug.Log($"I am {PhotonNetwork.LocalPlayer.ActorNumber} player");
-        // m_DirectionChoosing.SetActive(false);
+        m_DirectionChoosing.SetActive(false);
         m_DiceRolling.SetActive(false);
         m_Movement.SetActive(false);
         m_CarpetPlacement.SetActive(false);
@@ -168,9 +170,9 @@ public class TurnManager : MonoBehaviourPunCallbacks
         m_DiceRolling.SetActive(true);
     }
 
-     public void RollDice()
+    public void RollDice()
     {
-        int rollResult = Random.Range(1, 4);
+        int rollResult = UnityEngine.Random.Range(1, 4);
         // Debug.Log($"rolled {rollResult}");
         m_Game.photonView.RPC("AcceptMoveResult", RpcTarget.All, rollResult);
         // m_Game.AcceptMoveResult(rollResult);
@@ -204,7 +206,21 @@ public class TurnManager : MonoBehaviourPunCallbacks
         // TODO make controller
         if (Input.GetMouseButtonDown(0) && m_TurnPhase == TurnPhase.CarpetPlacement)
         {
-            m_Game.photonView.RPC("SpawnCarpet", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
+            Tuple<Vector2Int, Vector2Int> selectedNodes =  m_Game.GetSelectedNodesCoordinates();
+            Vector2Int firstNodeCoordinates = selectedNodes.Item1;
+            Vector2Int secondNodeCoordinates = selectedNodes.Item2;
+
+
+            // might also serialize 
+            // TODO maybe later 
+            int firstNodeX = firstNodeCoordinates.x;
+            int firstNodeY = firstNodeCoordinates.y;
+
+            int secondNodeX = secondNodeCoordinates.x;
+            int secondNodeY = secondNodeCoordinates.y;
+
+            m_Game.photonView.RPC("SpawnCarpet", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber,
+                firstNodeX, firstNodeY, secondNodeX, secondNodeY);
         }
     }
 

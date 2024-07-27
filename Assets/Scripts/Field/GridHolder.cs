@@ -156,10 +156,22 @@ public class GridHolder: MonoBehaviour
         return colorAndArea;
     }
 
-    public void SpawnCarpet(int carpetIdx)
+    public Tuple<Vector2Int, Vector2Int> GetSelectedNodesCoordinates()
     {
         NodeData firstNode = m_Grid.GetSelectedNode();
         NodeData secondNode = m_Grid.GetSecondSelectedNode();
+
+        Vector2Int firstNodeCoordinates = firstNode.Coordinates;
+        Vector2Int secondNodeCoordinates = secondNode.Coordinates;
+
+        return new Tuple<Vector2Int, Vector2Int>(firstNodeCoordinates, secondNodeCoordinates);
+    }
+
+    public void SpawnCarpet(int carpetIdx, Vector2Int firstNodeCoordinates, Vector2Int secondNodeCoordinates)
+    {
+        NodeData firstNode = m_Grid.GetNode(firstNodeCoordinates.x, firstNodeCoordinates.y);
+        NodeData secondNode = m_Grid.GetNode(secondNodeCoordinates.x, secondNodeCoordinates.y);
+
 
         // TODO probably rn nodes don't get selected on non-master clients
 
