@@ -60,6 +60,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
 
         currentPlayerIndex = 0;
         players = PhotonNetwork.PlayerList;
+        m_Game.InitPlayers(players.Length);
 
 
         // Точно не нужно на всех? Короче нужно раздебажить
@@ -187,7 +188,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
     public void Move()
     {
         // m_Game.Move();
-        m_Game.photonView.RPC("Move", RpcTarget.All);
+        m_Game.photonView.RPC("Move", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber - 1);
 
         m_TurnPhase = TurnPhase.CarpetPlacement;
         m_Movement.SetActive(false);

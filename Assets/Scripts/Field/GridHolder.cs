@@ -151,8 +151,11 @@ public class GridHolder: MonoBehaviour
 
     public Tuple<int, int> GetCurrentColorAndArea()
     {
-        NodeData SelectedNode = m_Grid.GetSelectedNode();
-        Tuple<int, int> colorAndArea = m_Grid.GetCurrentColorAndArea(SelectedNode);
+        Vector2Int assamCoordinates = GetAssamNodeCoordinates();
+        NodeData assamCurrentNode = m_Grid.GetNode(assamCoordinates.x, assamCoordinates.y);
+
+        // NodeData SelectedNode = m_Grid.GetSelectedNode();
+        Tuple<int, int> colorAndArea = m_Grid.GetCurrentColorAndArea(assamCurrentNode);
         return colorAndArea;
     }
 
@@ -276,14 +279,23 @@ public class GridHolder: MonoBehaviour
         }
     }
 
-    
 
-    public NodeData GetNextNodeInDirectionAndRotate(Direction direction)
+    private Vector2Int GetAssamNodeCoordinates()
     {
         Vector3 difference = m_Game.GetAssamPosition() - m_Offset;
 
         int x = (int)(difference.x / m_NodeSize);
         int y = (int)(difference.z / m_NodeSize);
+        return new Vector2Int(x, y);
+    }
+    
+
+    public NodeData GetNextNodeInDirectionAndRotate(Direction direction)
+    {
+        Vector2Int AssamPosition = GetAssamNodeCoordinates();
+        int x = AssamPosition.x;
+        int y = AssamPosition.y;
+
         Debug.Log($"Assam position: {x}, {y}");
         switch (direction)
         {

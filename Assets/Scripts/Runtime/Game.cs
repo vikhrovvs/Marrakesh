@@ -14,6 +14,7 @@ public class Game : MonoBehaviourPunCallbacks
     private TurnManager m_TurnManager;
     private int m_RollResult = 1;
     [SerializeField] private float m_DelayBetweenSteps = 0.1f;
+    private Players m_Players;
 
     void Awake()
     {
@@ -27,6 +28,11 @@ public class Game : MonoBehaviourPunCallbacks
         m_Assam = FindObjectOfType<Assam>();
         m_TurnManager = FindObjectOfType<TurnManager>();
         m_TurnManager.SetGame(this);
+    }
+
+    public void InitPlayers(int n_players)
+    {
+        m_Players = new Players(n_players);
     }
 
     public void TryToMoveAssam(Vector3 target)
@@ -62,32 +68,26 @@ public class Game : MonoBehaviourPunCallbacks
     }
     
     [PunRPC]
-    public void Move()
+    public void Move(int playerNumber)
     {
-        StartCoroutine(StartMovingAlongPath());
-        // Debug.Log($"path len: {pathLen}");
-        // foreach(NodeData nodeData in path)
-        // {
-            
-        //     // Debug.Log($"Moving Assam...");
-
-
-        //     // TODO wait
-        //     break;
-        // }
+        StartCoroutine(StartMovingAlongPath(playerNumber));
     }
 
-    private IEnumerator StartMovingAlongPath()
+    private IEnumerator StartMovingAlongPath(int playerNumber)
     {
         yield return StartCoroutine(MoveAlongPath());
-        Debug.Log("finished movement?");
 
-
-        // TODO rn is about selected node, need to change to Assam's
         Tuple<int, int> ColorAndArea = m_GridHolder.GetCurrentColorAndArea();
         int color = ColorAndArea.Item1;
         int area = ColorAndArea.Item2;
         Debug.Log($"Finished on a carpet cluster of color {color} and area {area}");
+
+        m_Players.FinishMovementOnColor(color, area, playerNumber);
+    }
+
+    public Vector3 GetAssamPosition()
+    {
+        return m_Assam.transform.position;
     }
 
     private IEnumerator MoveAlongPath()
@@ -111,11 +111,6 @@ public class Game : MonoBehaviourPunCallbacks
             yield return null;
         }
 
-    }
-
-    public Vector3 GetAssamPosition()
-    {
-        return m_Assam.transform.position;
     }
 
     [PunRPC]
