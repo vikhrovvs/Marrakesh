@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 
@@ -17,7 +19,11 @@ public class Game : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject PlayerUIParent;
     [SerializeField] private PlayerUI playerUIPrefab;
 
+    [SerializeField] private GameObject m_GameFinishUI;
+    [SerializeField] private Text m_GameFinishedText;
+
     private Players m_Players;
+    int m_PlayerCount;
 
     void Awake()
     {
@@ -37,6 +43,7 @@ public class Game : MonoBehaviourPunCallbacks
     public void InitPlayers(int n_players)
     {
         m_Players = new Players(n_players, this);
+        m_PlayerCount= n_players;
         CreatePlayersUI();
     }
 
@@ -44,14 +51,13 @@ public class Game : MonoBehaviourPunCallbacks
     {
         List<int> moneyValues = m_Players.GetMoneyValues();
         List<int> carpetValues = m_Players.GetCarpetValues();
-        int n_players = moneyValues.Count;
 
         List<PlayerUI> playerUIs = new List<PlayerUI>();
-        for (int i = 0; i < n_players; ++i)
+        for (int i = 0; i < m_PlayerCount; ++i)
         {
             PlayerUI playerUI = Instantiate(playerUIPrefab);
             playerUI.Initialize(i, moneyValues[i], carpetValues[i]);
-            playerUI.gameObject.transform.parent = PlayerUIParent.transform;
+            playerUI.gameObject.transform.SetParent(PlayerUIParent.transform, false);
 
             playerUIs.Add(playerUI);
         }
@@ -88,7 +94,7 @@ public class Game : MonoBehaviourPunCallbacks
     public void AcceptMoveResult(int result) 
     {
         m_RollResult = result;
-        Debug.Log($"accepted result{result}");
+        // Debug.Log($"accepted result{result}");
     }
     
     [PunRPC]
@@ -175,5 +181,48 @@ public class Game : MonoBehaviourPunCallbacks
     public void EndCarpetPlacement()
     {
         m_TurnManager.EndCarpetPlacement();
+    }
+
+    public int GetCarpetValue(int playerIdx)
+    {
+        List<int> carpetValues = m_Players.GetCarpetValues();
+        return carpetValues[playerIdx];
+    }
+
+    public int GetPlayerCount()
+    {
+        return m_PlayerCount;
+    }
+
+    public void FinishGame()
+    {
+        List<int> monetCount = m_Players.GetMoneyValues();
+        List<int> activeCarpetCount = m_GridHolder.CountColors();
+
+        int maxIndex = 0;
+        int maxValue = monetCount[0] + activeCarpetCount[0];
+        for (int i = 1; i < monetCount.Count; ++i)
+        {
+            int value = monetCount[i] + activeCarpetCount[i];
+            if ((value == maxValue) && (monetCount[i] > monetCount[maxIndex]))
+            {
+                maxIndex = i;
+                continue;
+            }
+            if (value > maxValue)
+            {
+                maxValue = value;
+                maxIndex = i;
+                continue;
+            }
+        }
+
+        PlayerUIParent.SetActive(false);
+        m_GameFinishUI.SetActive(true);
+        m_GameFinishedText.text = $"Game finished!\nWinner: {maxIndex}";
+
+        // count money
+        // count carpets
+        // choose winner
     }
 }

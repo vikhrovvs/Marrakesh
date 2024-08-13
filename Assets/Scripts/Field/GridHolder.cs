@@ -301,7 +301,7 @@ public class GridHolder: MonoBehaviour
         int x = AssamPosition.x;
         int y = AssamPosition.y;
 
-        Debug.Log($"Assam position: {x}, {y}");
+        // Debug.Log($"Assam position: {x}, {y}");
         switch (direction)
         {
             case Direction.Up:
@@ -409,5 +409,27 @@ public class GridHolder: MonoBehaviour
         
         NodeData node = m_Grid.GetNode(x, y);
         return node;
+    }
+
+    public List<int> CountColors()
+    {
+        int n_players = m_Game.GetPlayerCount();
+        List<int> colorCount = new List<int>();
+        for (int i = 0; i < n_players; ++i)
+        {
+            colorCount.Add(0);
+        }
+
+        foreach(NodeData nodeData in m_Grid.EnumerateAllNodes())
+        {
+            int color = nodeData.GetColor();
+            if (color == -1)
+            {
+                continue;
+            }
+            ++colorCount[color];
+        }
+
+        return colorCount;
     }
 }

@@ -92,7 +92,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
         // Notify all players whose turn it is
         if (PhotonNetwork.LocalPlayer.ActorNumber == playerActorNumber)
         {
-            Debug.Log("Setting active");
+            // Debug.Log("Setting active");
             // Enable UI for the current player to take their turn
             m_DirectionChoosing.SetActive(true);
             m_TurnPhase = TurnPhase.DirectionChoosing;
@@ -120,11 +120,26 @@ public class TurnManager : MonoBehaviourPunCallbacks
         }
     }
 
+    private bool GameShouldBeFinished()
+    {
+        Debug.Log("Checking if the game should be finished");
+        Debug.Log($"Current player index is? {currentPlayerIndex}");
+        Debug.Log($"Carpet value is? {m_Game.GetCarpetValue(0)}");
+        return (currentPlayerIndex == 0) && (m_Game.GetCarpetValue(0) == 0);
+    }
+
     [PunRPC]
     void NextTurn()
     {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.Length;
-        photonView.RPC("StartTurn", RpcTarget.All, players[currentPlayerIndex].ActorNumber);
+        if (GameShouldBeFinished())
+        {
+            m_Game.FinishGame();
+        }
+        else
+        {
+            photonView.RPC("StartTurn", RpcTarget.All, players[currentPlayerIndex].ActorNumber);
+        }
     }
 
     // doesn't it send StartTurn call once each time for all the players?
@@ -139,7 +154,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
     {
         return m_TurnPhase;
     }
-    
+
     void UpdateTurnUI(bool isMyTurn)
     {
         // Enable or disable UI elements based on the current turn
@@ -246,5 +261,15 @@ public class TurnManager : MonoBehaviourPunCallbacks
     {
         m_CarpetPlacement.SetActive(false);
         EndTurn();
+    }
+
+    public void LeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
+
+    public override void OnLeftRoom()
+    {
+        PhotonNetwork.LoadLevel("Lobby");
     }
 }

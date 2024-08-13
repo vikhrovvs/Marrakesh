@@ -11,7 +11,7 @@ public class Players
     private Game m_Game;
     private Dictionary<int, int> defaultCarpetNumber = new Dictionary<int, int> 
     {
-        {1, 5},  // debug purposes
+        {1, 2},  // debug purposes
         {2, 12},
         {3, 15},
         {4, 12},
@@ -46,7 +46,7 @@ public class Players
 
     private void UpdatePlayersUI()
     {
-        Debug.Log("Updating player UIs...");
+        // Debug.Log("Updating player UIs...");x
         for (int i = 0; i < n_players; ++i)
         {
             m_playerUIs[i].SetMoney(moneyAmount[i]);
