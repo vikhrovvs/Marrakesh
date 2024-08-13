@@ -155,4 +155,13 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.LoadLevel("Game");
     }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+    }
+
 }
