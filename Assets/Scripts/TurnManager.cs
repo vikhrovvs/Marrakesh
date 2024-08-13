@@ -131,9 +131,15 @@ public class TurnManager : MonoBehaviourPunCallbacks
 
     public bool IsMyTurn()
     {
+        // TODO: use m_TurnPhase if confirmed to work properly?
         return PhotonNetwork.LocalPlayer.ActorNumber == players[currentPlayerIndex].ActorNumber;
     }
 
+    public TurnPhase GetTurnPhase()
+    {
+        return m_TurnPhase;
+    }
+    
     void UpdateTurnUI(bool isMyTurn)
     {
         // Enable or disable UI elements based on the current turn

@@ -8,6 +8,7 @@ public class Players
     private int n_players;
     private int defaultMoneyNumber = 30;
 
+    private Game m_Game;
     private Dictionary<int, int> defaultCarpetNumber = new Dictionary<int, int> 
     {
         {1, 5},  // debug purposes
@@ -16,12 +17,18 @@ public class Players
         {4, 12},
     };
 
+    // private GameObject m_PlayerUIParent;
+    // private PlayerUI m_PlayerUIPrefab;
 
     private List<int> moneyAmount = new List<int>();
     private List<int> carpetAmount = new List<int>();
-    public Players (int N_players)
+    private List<PlayerUI> m_playerUIs;
+
+
+    public Players (int N_players, Game game)
     {
         n_players = N_players;
+        m_Game = game;
         int carpetNumber = defaultCarpetNumber[n_players];
         for (int i = 0; i < n_players; ++i)
         {
@@ -29,6 +36,25 @@ public class Players
             carpetAmount.Add(carpetNumber);
         }
     }
+
+    
+
+    public void SetPlayerUIs(List<PlayerUI> playerUIs)
+    {
+        m_playerUIs = playerUIs;
+    }
+
+    private void UpdatePlayersUI()
+    {
+        Debug.Log("Updating player UIs...");
+        for (int i = 0; i < n_players; ++i)
+        {
+            m_playerUIs[i].SetMoney(moneyAmount[i]);
+            m_playerUIs[i].SetCarpetCount(carpetAmount[i]);
+        }
+    }
+
+    
 
     public List<int> GetMoneyValues()
     {
@@ -43,6 +69,7 @@ public class Players
     public void DecreaseCarpetAmount(int player)
     {
         carpetAmount[player] -= 1;
+        UpdatePlayersUI();
     }
 
     private void DeductMoney(int player, int moneyToDeduct)
@@ -62,6 +89,7 @@ public class Players
     {
         AddMoney(toPlayer, amount);
         DeductMoney(fromPlayer, amount);
+        UpdatePlayersUI();
     }
 
     public void FinishMovementOnColor(int color, int area, int player)

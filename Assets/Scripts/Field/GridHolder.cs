@@ -59,6 +59,11 @@ public class GridHolder: MonoBehaviour
         m_Game = game;
     }
 
+    public TurnPhase GetTurnPhase()
+    {
+        return m_Game.GetTurnPhase();
+    }
+
     public void ChangeOrientation()
     {
         m_Grid.ChangeOrientation();

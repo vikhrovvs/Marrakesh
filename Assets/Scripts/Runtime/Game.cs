@@ -14,6 +14,9 @@ public class Game : MonoBehaviourPunCallbacks
     private TurnManager m_TurnManager;
     private int m_RollResult = 1;
     [SerializeField] private float m_DelayBetweenSteps = 0.1f;
+    [SerializeField] private GameObject PlayerUIParent;
+    [SerializeField] private PlayerUI playerUIPrefab;
+
     private Players m_Players;
 
     void Awake()
@@ -30,9 +33,30 @@ public class Game : MonoBehaviourPunCallbacks
         m_TurnManager.SetGame(this);
     }
 
+
     public void InitPlayers(int n_players)
     {
-        m_Players = new Players(n_players);
+        m_Players = new Players(n_players, this);
+        CreatePlayersUI();
+    }
+
+    public void CreatePlayersUI()
+    {
+        List<int> moneyValues = m_Players.GetMoneyValues();
+        List<int> carpetValues = m_Players.GetCarpetValues();
+        int n_players = moneyValues.Count;
+
+        List<PlayerUI> playerUIs = new List<PlayerUI>();
+        for (int i = 0; i < n_players; ++i)
+        {
+            PlayerUI playerUI = Instantiate(playerUIPrefab);
+            playerUI.Initialize(i, moneyValues[i], carpetValues[i]);
+            playerUI.gameObject.transform.parent = PlayerUIParent.transform;
+
+            playerUIs.Add(playerUI);
+        }
+
+        m_Players.SetPlayerUIs(playerUIs);
     }
 
     public void TryToMoveAssam(Vector3 target)
@@ -125,6 +149,11 @@ public class Game : MonoBehaviourPunCallbacks
         return m_GridHolder.CarpetColor;
     }
 
+    public TurnPhase GetTurnPhase()
+    {
+        return m_TurnManager.GetTurnPhase();
+    }
+
 
     public Tuple<Vector2Int, Vector2Int> GetSelectedNodesCoordinates()
     {
@@ -139,6 +168,8 @@ public class Game : MonoBehaviourPunCallbacks
         Vector2Int secondNodeCoordinates = new Vector2Int(secondNodeX, secondNodeY);
 
         m_GridHolder.SpawnCarpet(carpetIdx, firstNodeCoordinates, secondNodeCoordinates);
+
+        m_Players.DecreaseCarpetAmount(carpetIdx);
     }
 
     public void EndCarpetPlacement()

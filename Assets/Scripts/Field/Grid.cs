@@ -133,14 +133,19 @@ public class Grid
         NodeData? PrevSecondSelectedNode = SecondSelectedNode;
         MakeNodeOpaque(PrevSecondSelectedNode);
 
-
         NodeData? selectedNode = GetNode(coordinates.x, coordinates.y);
         SelectedNode = selectedNode;
-        MakeNodeTransparent(selectedNode);
 
         NodeData? secondSelectedNode = GetSecondNodeInCorrespondingOrientation(coordinates);
         SecondSelectedNode = secondSelectedNode;
-        MakeSecondNodeTransparent(SecondSelectedNode);
+
+        TurnPhase currentTurnPhase = m_GridHolder.GetTurnPhase();
+        if (currentTurnPhase == TurnPhase.CarpetPlacement)
+        {
+            MakeNodeTransparent(SelectedNode);
+            MakeSecondNodeTransparent(SecondSelectedNode);
+        }
+
     }
 
     private void MakeNodeOpaque(NodeData? node)
