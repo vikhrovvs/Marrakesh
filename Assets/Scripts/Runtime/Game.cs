@@ -199,10 +199,8 @@ public class Game : MonoBehaviourPunCallbacks
         int carpetIdx = playerNumber - 1;
         Vector2Int firstNodeCoordinates = new Vector2Int(firstNodeX, firstNodeY);
         Vector2Int secondNodeCoordinates = new Vector2Int(secondNodeX, secondNodeY);
-
-        m_GridHolder.SpawnCarpet(carpetIdx, firstNodeCoordinates, secondNodeCoordinates);
-
         m_Players.DecreaseCarpetAmount(carpetIdx);
+        m_GridHolder.SpawnCarpet(carpetIdx, firstNodeCoordinates, secondNodeCoordinates);
     }
 
     public void EndCarpetPlacement()
