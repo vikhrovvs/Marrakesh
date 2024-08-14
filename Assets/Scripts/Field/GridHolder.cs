@@ -172,6 +172,12 @@ public class GridHolder: MonoBehaviour
         return colorAndArea;
     }
 
+    public bool HasSelectedNode()
+    {
+        NodeData selectedNode = m_Grid.GetSelectedNode();
+        return !(selectedNode is null);
+    }
+
     public Tuple<Vector2Int, Vector2Int> GetSelectedNodesCoordinates()
     {
         NodeData firstNode = m_Grid.GetSelectedNode();
@@ -224,7 +230,7 @@ public class GridHolder: MonoBehaviour
         {
             return false;
         }
-        
+
         return true;
     }
 

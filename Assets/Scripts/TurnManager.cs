@@ -4,6 +4,7 @@ using Photon.Realtime;
 using UnityEngine.UI;
 using System;
 using System.Collections;
+using System.Runtime.Serialization;
 
 
 public enum TurnPhase
@@ -239,6 +240,10 @@ public class TurnManager : MonoBehaviourPunCallbacks
     {
         // TODO make controller
         if (!(Input.GetMouseButtonDown(0) && m_TurnPhase == TurnPhase.CarpetPlacement))
+        {
+            return;
+        }
+        if (!m_Game.HasSelectedNode())
         {
             return;
         }
