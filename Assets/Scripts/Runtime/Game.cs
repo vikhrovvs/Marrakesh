@@ -23,7 +23,8 @@ public class Game : MonoBehaviourPunCallbacks
     [SerializeField] private Text m_GameFinishedText;
 
     private Players m_Players;
-    int m_PlayerCount;
+    private int m_PlayerCount;
+    private bool m_IsMovingPhase = false;
 
     void Awake()
     {
@@ -96,6 +97,21 @@ public class Game : MonoBehaviourPunCallbacks
         m_RollResult = result;
         // Debug.Log($"accepted result{result}");
     }
+
+    public void StartMovingPhase()
+    {
+        m_IsMovingPhase = true;
+    }
+
+    private void FinishMovingPhase()
+    {
+        m_IsMovingPhase = false;
+    }
+
+    public bool IsMovingPhase()
+    {
+        return m_IsMovingPhase;
+    }
     
     [PunRPC]
     public void Move(int playerNumber)
@@ -106,6 +122,8 @@ public class Game : MonoBehaviourPunCallbacks
     private IEnumerator StartMovingAlongPath(int playerNumber)
     {
         yield return StartCoroutine(MoveAlongPath());
+
+        FinishMovingPhase();
 
         Tuple<int, int> ColorAndArea = m_GridHolder.GetCurrentColorAndArea();
         int color = ColorAndArea.Item1;
@@ -140,6 +158,15 @@ public class Game : MonoBehaviourPunCallbacks
             }
             yield return null;
         }
+        // wait so the movement 100% begins
+        float delayBetweenStart = 2 * Time.deltaTime; 
+        yield return new WaitForSeconds(delayBetweenStart);
+        // wait for Assam to stop
+        while (m_Assam.IsMoving())
+        {
+            yield return null;
+        }
+        Debug.Log("finished movement");
 
     }
 

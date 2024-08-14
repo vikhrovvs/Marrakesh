@@ -201,6 +201,9 @@ public class TurnManager : MonoBehaviourPunCallbacks
         rollResultText.text = $"Rolled {rollResult}";
 
 
+        m_Game.StartMovingPhase(); 
+        // Executed only for the local game! (But we are ok with that)
+
         m_TurnPhase = TurnPhase.Moving;
         m_DiceRolling.SetActive(false);
         m_Movement.SetActive(true);
@@ -208,8 +211,18 @@ public class TurnManager : MonoBehaviourPunCallbacks
 
     public void Move()
     {
+        StartCoroutine(MakeMove());
+    }
+
+    private IEnumerator MakeMove()
+    {
         // m_Game.Move();
+        m_Game.StartMovingPhase();
         m_Game.photonView.RPC("Move", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber - 1);
+        while (m_Game.IsMovingPhase())
+        {
+            yield return null;
+        }
 
         m_TurnPhase = TurnPhase.CarpetPlacement;
         m_Movement.SetActive(false);
