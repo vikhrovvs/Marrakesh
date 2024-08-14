@@ -40,6 +40,14 @@ public class GridHolder: MonoBehaviour
     private GameObject m_CarpetParent;
     private Vector3 m_CarpetScale = new Vector3(0.08f, 1, 0.16f);
 
+    private List<Vector2Int> m_AdjacentNodeDeltas = new List<Vector2Int>
+    {
+        new Vector2Int(0, 1),
+        new Vector2Int(0, -1),
+        new Vector2Int(1, 0),
+        new Vector2Int(-1, 0),
+    };
+
 
     public void CreateGrid()
     {
@@ -173,6 +181,51 @@ public class GridHolder: MonoBehaviour
         Vector2Int secondNodeCoordinates = secondNode.Coordinates;
 
         return new Tuple<Vector2Int, Vector2Int>(firstNodeCoordinates, secondNodeCoordinates);
+    }
+
+    private bool DoesCarpetExistOnNodes(NodeData firstNode, NodeData secondNode)
+    {
+        foreach(CarpetData carpet in carpets)
+        {
+            if (carpet.IsCarpetOnNodes(firstNode, secondNode))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool AreAdjacentCoordinates(Vector2Int first, Vector2Int second)
+    {
+        foreach(Vector2Int delta in m_AdjacentNodeDeltas)
+        {
+            if (first + delta == second)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool IsCurrentCarpetPlacementCorrect()
+    {
+        NodeData firstNode = m_Grid.GetSelectedNode();
+        NodeData secondNode = m_Grid.GetSecondSelectedNode();
+
+        Vector2Int AssamCoordinates = GetAssamNodeCoordinates();
+        Vector2Int firstCoordinates = firstNode.Coordinates;
+        Vector2Int secondCoordinates = secondNode.Coordinates;
+        if (!AreAdjacentCoordinates(AssamCoordinates, firstCoordinates) && !AreAdjacentCoordinates(AssamCoordinates, secondCoordinates))
+        {
+            return false;
+        }
+
+        if (DoesCarpetExistOnNodes(firstNode, secondNode))
+        {
+            return false;
+        }
+        
+        return true;
     }
 
     public void SpawnCarpet(int carpetIdx, Vector2Int firstNodeCoordinates, Vector2Int secondNodeCoordinates)

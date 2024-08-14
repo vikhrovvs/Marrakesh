@@ -36,6 +36,8 @@ public class TurnManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject m_CarpetPlacement;
 
 
+    [SerializeField] private Text m_IncorrectCarpetPlacementText;
+    [SerializeField] private float m_IncorrectCarpetPlacementTextFadeoutDuration = 1f;
 
 
     void Awake()
@@ -53,10 +55,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("starting");
         Debug.Log($"I am {PhotonNetwork.LocalPlayer.ActorNumber} player");
-        m_DirectionChoosing.SetActive(false);
-        m_DiceRolling.SetActive(false);
-        m_Movement.SetActive(false);
-        m_CarpetPlacement.SetActive(false);
+        InitializeUI();
 
         currentPlayerIndex = 0;
         players = PhotonNetwork.PlayerList;
@@ -84,6 +83,15 @@ public class TurnManager : MonoBehaviourPunCallbacks
 
     }
 
+    private void InitializeUI()
+    {
+        m_DirectionChoosing.SetActive(false);
+        m_DiceRolling.SetActive(false);
+        m_Movement.SetActive(false);
+        m_CarpetPlacement.SetActive(false);
+        MakeIncorrectCarpetPlacementMessageTransparent();
+    }
+
     [PunRPC]
     void StartTurn(int playerActorNumber)
     {
@@ -102,15 +110,6 @@ public class TurnManager : MonoBehaviourPunCallbacks
             // Disable UI for other players
         }
     }
-
-    /*
-    Рисуем UI хода
-    По клику на стрелку разворачиваем и включаем кнопку roll dice
-    Дайс роллится, автоматически чел идет
-    Происходит логика с деньгами при остановке
-    Включается кнопка place carpet
-
-    */
 
     public void EndTurn()
     {
@@ -239,24 +238,69 @@ public class TurnManager : MonoBehaviourPunCallbacks
     private void Update()
     {
         // TODO make controller
-        if (Input.GetMouseButtonDown(0) && m_TurnPhase == TurnPhase.CarpetPlacement)
+        if (!(Input.GetMouseButtonDown(0) && m_TurnPhase == TurnPhase.CarpetPlacement))
         {
-            Tuple<Vector2Int, Vector2Int> selectedNodes =  m_Game.GetSelectedNodesCoordinates();
-            Vector2Int firstNodeCoordinates = selectedNodes.Item1;
-            Vector2Int secondNodeCoordinates = selectedNodes.Item2;
-
-
-            // might also serialize 
-            // TODO maybe later 
-            int firstNodeX = firstNodeCoordinates.x;
-            int firstNodeY = firstNodeCoordinates.y;
-
-            int secondNodeX = secondNodeCoordinates.x;
-            int secondNodeY = secondNodeCoordinates.y;
-
-            m_Game.photonView.RPC("SpawnCarpet", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber,
-                firstNodeX, firstNodeY, secondNodeX, secondNodeY);
+            return;
         }
+        if (!m_Game.IsCurrentCarpetPlacementCorrect())
+        {
+            ShowIncorrectCarpetPlacementMessage();
+            return;
+        }
+
+        Tuple<Vector2Int, Vector2Int> selectedNodes =  m_Game.GetSelectedNodesCoordinates();
+        Vector2Int firstNodeCoordinates = selectedNodes.Item1;
+        Vector2Int secondNodeCoordinates = selectedNodes.Item2;
+
+        // might also serialize 
+        // TODO maybe later 
+        int firstNodeX = firstNodeCoordinates.x;
+        int firstNodeY = firstNodeCoordinates.y;
+
+        int secondNodeX = secondNodeCoordinates.x;
+        int secondNodeY = secondNodeCoordinates.y;
+
+        m_Game.photonView.RPC("SpawnCarpet", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber,
+            firstNodeX, firstNodeY, secondNodeX, secondNodeY);
+    }
+
+    private void ShowIncorrectCarpetPlacementMessage()
+    {
+        MakeIncorrectCarpetPlacementMessageOpaque();
+        StartCoroutine(FadeOutIncorrectCarpetPlacementMessage());
+    }
+
+    private IEnumerator FadeOutIncorrectCarpetPlacementMessage()
+    {
+        float startAlpha = m_IncorrectCarpetPlacementText.color.a;
+        float rate = 1.0f / m_IncorrectCarpetPlacementTextFadeoutDuration;
+        float progress = 0.0f;
+
+        while (progress < 1.0f)
+        {
+            Color tmpColor = m_IncorrectCarpetPlacementText.color;
+            tmpColor.a = Mathf.Lerp(startAlpha, 0, progress);
+            m_IncorrectCarpetPlacementText.color = tmpColor;
+            progress += rate * Time.deltaTime;
+
+            yield return null;
+        }
+        
+        MakeIncorrectCarpetPlacementMessageTransparent();
+    }
+
+    private void MakeIncorrectCarpetPlacementMessageTransparent()
+    {
+        Color tmpColor = m_IncorrectCarpetPlacementText.color;
+        tmpColor.a = 0;
+        m_IncorrectCarpetPlacementText.color = tmpColor;
+    }
+
+    private void MakeIncorrectCarpetPlacementMessageOpaque()
+    {
+        Color tmpColor = m_IncorrectCarpetPlacementText.color;
+        tmpColor.a = 1;
+        m_IncorrectCarpetPlacementText.color = tmpColor;
     }
 
 

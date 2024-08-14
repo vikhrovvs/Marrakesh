@@ -188,6 +188,11 @@ public class Game : MonoBehaviourPunCallbacks
     }
 
 
+    public bool IsCurrentCarpetPlacementCorrect()
+    {
+        return m_GridHolder.IsCurrentCarpetPlacementCorrect();
+    }
+
     public Tuple<Vector2Int, Vector2Int> GetSelectedNodesCoordinates()
     {
         return m_GridHolder.GetSelectedNodesCoordinates();
