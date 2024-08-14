@@ -58,8 +58,8 @@ public class Game : MonoBehaviourPunCallbacks
         List<PlayerUI> playerUIs = new List<PlayerUI>();
         for (int i = 0; i < m_PlayerCount; ++i)
         {
-            String nickname = players[i].NickName;
-            
+            string nickname = players[i].NickName;
+
             PlayerUI playerUI = Instantiate(playerUIPrefab);
             playerUI.Initialize(i, moneyValues[i], carpetValues[i], nickname);
             playerUI.gameObject.transform.SetParent(PlayerUIParent.transform, false);
