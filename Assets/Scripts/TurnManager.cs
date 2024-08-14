@@ -131,6 +131,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void NextTurn()
     {
+        m_Game.RemoveInactivePlayerHighlight(currentPlayerIndex);
         currentPlayerIndex = (currentPlayerIndex + 1) % players.Length;
         if (GameShouldBeFinished())
         {
@@ -138,6 +139,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
         }
         else
         {
+            m_Game.HighlightActivePlayer(currentPlayerIndex);
             photonView.RPC("StartTurn", RpcTarget.All, players[currentPlayerIndex].ActorNumber);
         }
     }

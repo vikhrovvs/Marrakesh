@@ -70,6 +70,16 @@ public class Game : MonoBehaviourPunCallbacks
         m_Players.SetPlayerUIs(playerUIs);
     }
 
+    public void HighlightActivePlayer(int playerIdx)
+    {
+        m_Players.HighlightActivePlayer(playerIdx);
+    }
+
+    public void RemoveInactivePlayerHighlight(int playerIdx)
+    {
+        m_Players.RemoveInactivePlayerHighlight(playerIdx);
+    }
+
     public void TryToMoveAssam(Vector3 target)
     {
         m_Assam.TryMoveToPoint(target);

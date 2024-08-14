@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PlayerUI: MonoBehaviourPunCallbacks
 {
+    [SerializeField] private Image background;
+    [SerializeField] private float m_InactivePlayerOpacity = 0.8f;
     [SerializeField] private Text playerText;  // TODO material?
     [SerializeField] private Text moneyText;
     [SerializeField] private Text carpetCountText;
@@ -14,6 +16,7 @@ public class PlayerUI: MonoBehaviourPunCallbacks
         playerText.text = $"Player {playerNumber}\n{nickname}";
         moneyText.text = $"Money: {moneyNumber}";
         carpetCountText.text = $"Carpets: {carpetNumber}";
+        RemoveHighlight();
     }
 
     public void SetMoney(int money)
@@ -28,11 +31,15 @@ public class PlayerUI: MonoBehaviourPunCallbacks
 
     public void Highlight()
     {
-
+        Color tmpColor = background.color;
+        tmpColor.a = 1;
+        background.color = tmpColor;
     }
 
     public void RemoveHighlight()
     {
-
+        Color tmpColor = background.color;
+        tmpColor.a = m_InactivePlayerOpacity;
+        background.color = tmpColor;
     }
 }

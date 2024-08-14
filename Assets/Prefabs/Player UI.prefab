@@ -170,6 +170,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 904fb39210143b04aba58bbd98683432, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  background: {fileID: 1641753467901711033}
+  m_InactivePlayerOpacity: 0.8
   playerText: {fileID: 1641753469305627085}
   moneyText: {fileID: 1641753467329169903}
   carpetCountText: {fileID: 1641753468047940852}

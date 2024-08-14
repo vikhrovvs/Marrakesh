@@ -54,6 +54,15 @@ public class Players
         }
     }
 
+    public void HighlightActivePlayer(int playerIdx)
+    {
+        m_playerUIs[playerIdx].Highlight();
+    }
+
+    public void RemoveInactivePlayerHighlight(int playerIdx)
+    {
+        m_playerUIs[playerIdx].RemoveHighlight();
+    }
     
 
     public List<int> GetMoneyValues()
