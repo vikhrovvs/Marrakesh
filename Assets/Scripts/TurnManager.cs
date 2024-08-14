@@ -60,7 +60,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
 
         currentPlayerIndex = 0;
         players = PhotonNetwork.PlayerList;
-        m_Game.InitPlayers(players.Length);
+        m_Game.InitPlayers(players);
 
 
         // Точно не нужно на всех? Короче нужно раздебажить

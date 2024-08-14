@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
@@ -41,14 +42,15 @@ public class Game : MonoBehaviourPunCallbacks
     }
 
 
-    public void InitPlayers(int n_players)
+    public void InitPlayers(Player[] players)
     {
+        int n_players = players.Length;
         m_Players = new Players(n_players, this);
         m_PlayerCount= n_players;
-        CreatePlayersUI();
+        CreatePlayersUI(players);
     }
 
-    public void CreatePlayersUI()
+    public void CreatePlayersUI(Player[] players)
     {
         List<int> moneyValues = m_Players.GetMoneyValues();
         List<int> carpetValues = m_Players.GetCarpetValues();
@@ -56,8 +58,10 @@ public class Game : MonoBehaviourPunCallbacks
         List<PlayerUI> playerUIs = new List<PlayerUI>();
         for (int i = 0; i < m_PlayerCount; ++i)
         {
+            String nickname = players[i].NickName;
+            
             PlayerUI playerUI = Instantiate(playerUIPrefab);
-            playerUI.Initialize(i, moneyValues[i], carpetValues[i]);
+            playerUI.Initialize(i, moneyValues[i], carpetValues[i], nickname);
             playerUI.gameObject.transform.SetParent(PlayerUIParent.transform, false);
 
             playerUIs.Add(playerUI);

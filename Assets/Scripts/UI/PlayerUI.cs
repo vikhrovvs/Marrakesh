@@ -9,9 +9,9 @@ public class PlayerUI: MonoBehaviourPunCallbacks
     [SerializeField] private Text moneyText;
     [SerializeField] private Text carpetCountText;
 
-    public void Initialize(int playerNumber, int moneyNumber, int carpetNumber)
+    public void Initialize(int playerNumber, int moneyNumber, int carpetNumber, string nickname)
     {
-        playerText.text = $"Player {playerNumber}";
+        playerText.text = $"Player {playerNumber}\n{nickname}";
         moneyText.text = $"Money: {moneyNumber}";
         carpetCountText.text = $"Carpets: {carpetNumber}";
     }
