@@ -123,8 +123,8 @@ public class TurnManager : MonoBehaviourPunCallbacks
     private bool GameShouldBeFinished()
     {
         Debug.Log("Checking if the game should be finished");
-        Debug.Log($"Current player index is? {currentPlayerIndex}");
-        Debug.Log($"Carpet value is? {m_Game.GetCarpetValue(0)}");
+        Debug.Log($"Current player index is {currentPlayerIndex}");
+        Debug.Log($"Carpet value is {m_Game.GetCarpetValue(0)}");
         return (currentPlayerIndex == 0) && (m_Game.GetCarpetValue(0) == 0);
     }
 

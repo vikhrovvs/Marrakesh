@@ -70,9 +70,7 @@ public class Assam : MonoBehaviour
     {
         Vector3 euler = transform.rotation.eulerAngles;
         float y = euler.y;
-        // Debug.Log(y);
         y = Mathf.Round(y / 90) * 90;
-        // Debug.Log(y);
         switch(y)
         {
             case 0:

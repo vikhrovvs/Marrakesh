@@ -57,19 +57,7 @@ public class Grid
                 view.transform.position = nodePosition;
                 view.transform.localScale = Vector3.one * (m_NodeSizeModifier * nodeSize / 10f);
                 view.transform.parent = m_NodeParent.transform;
-                // TODO resize
-                newNode.AttachView(view);
-
-
-                /*
-                EnemyView view = Object.Instantiate(asset.ViewPrefab);
-        Vector3 startNodePosition = m_Grid.GetStartNode().Position;
-        view.transform.position = new Vector3(startNodePosition.x, view.transform.position.y, startNodePosition.z);   ;
-        EnemyData data = new EnemyData(asset);
-
-        data.AttachView(view);
-        */
-                
+                newNode.AttachView(view);                
             }
         }
 
@@ -77,7 +65,6 @@ public class Grid
 
     public void ChangeOrientation()
     {
-        
         m_CurrentOrientation = (Orientation)(1 - (int)m_CurrentOrientation);
     }
 
@@ -94,10 +81,8 @@ public class Grid
             {
                 yield return GetNode(i, j);
             }
-
         }
     }
-
     
 
     public NodeData? GetNode(int i, int j)
@@ -106,7 +91,6 @@ public class Grid
         {
             return null;
         }
-
         if (j < 0 || j >= m_Height)
         {
             return null;

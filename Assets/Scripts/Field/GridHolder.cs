@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Photon.Pun;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -130,19 +129,7 @@ public class GridHolder: MonoBehaviour
 
             m_Grid.SwitchSelectedNode(selectedNode);
 
-
-            // if (Input.GetMouseButtonDown(0))
-            // {
-            //     SpawnCarpet(m_CarpetColor);
-            // }
-
-                // Debug.Log("logging click");
-                // m_Grid.SetColorToNode(1, selectedNode);
-
-                // NodeData selectedNodeObject = m_Grid.GetNode(x, y);
-                // m_Game.TryToMoveAssam(selectedNodeObject.Position);
-
-            if (Input.GetKeyDown("c"))
+            if (Input.GetKeyDown(KeyCode.C))
             {
                 NodeData SelectedNode = m_Grid.GetSelectedNode();
                 Tuple<int, int> colorAndArea = m_Grid.GetCurrentColorAndArea(SelectedNode);
@@ -153,8 +140,6 @@ public class GridHolder: MonoBehaviour
 
 
             }
-
-            // m_Grid.SelectCoordinate(new Vector2Int(x, y));
         }
         else
         {
@@ -167,7 +152,6 @@ public class GridHolder: MonoBehaviour
         Vector2Int assamCoordinates = GetAssamNodeCoordinates();
         NodeData assamCurrentNode = m_Grid.GetNode(assamCoordinates.x, assamCoordinates.y);
 
-        // NodeData SelectedNode = m_Grid.GetSelectedNode();
         Tuple<int, int> colorAndArea = m_Grid.GetCurrentColorAndArea(assamCurrentNode);
         return colorAndArea;
     }
@@ -239,9 +223,6 @@ public class GridHolder: MonoBehaviour
         NodeData firstNode = m_Grid.GetNode(firstNodeCoordinates.x, firstNodeCoordinates.y);
         NodeData secondNode = m_Grid.GetNode(secondNodeCoordinates.x, secondNodeCoordinates.y);
 
-
-        // TODO probably rn nodes don't get selected on non-master clients
-
         Vector3 firstPositon = firstNode.GetView().gameObject.transform.position;
         Vector3 secondPosition = secondNode.GetView().gameObject.transform.position;
 
@@ -249,7 +230,6 @@ public class GridHolder: MonoBehaviour
         maxCarpetHeight += CarpetHeight; // yes, elevate first; probably change later
         carpetPosition.y = maxCarpetHeight;
 
-        // TODO rotation
         CarpetData data = new CarpetData(firstNode, secondNode);
         firstNode.SetColor(carpetIdx);
         secondNode.SetColor(carpetIdx);
@@ -279,66 +259,13 @@ public class GridHolder: MonoBehaviour
             return;
         }
 
-        // int i = 0;
         foreach (NodeData node in m_Grid.EnumerateAllNodes())
         {
-            // if (node.NextNode == null)
-            // {
-            //     continue;
-            // }
-            /*
-            if (node.IsOccupied)
-            {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawSphere(node.Position, 0.2f*m_NodeSize);
-                continue;
-            }
-            */
-
-
-            // switch (node.GetColor())
-            // {
-            //     case -1:
-            //     {
-            //         Gizmos.color = Color.yellow;
-            //         return;
-            //     }
-            //     case 0:
-            //     {
-            //         Gizmos.color = Color.white;
-            //         return;
-            //     }
-            //     case 1:
-            //     {
-            //         Gizmos.color = Color.red;
-            //         return;
-            //     }
-            //     case 2:
-            //     {
-            //         Gizmos.color = Color.green;
-            //         return;
-            //     }
-            //     case 3:
-            //     {
-            //         Gizmos.color = Color.blue;
-            //         return;
-            //     }
-            // }
-
-
-
-            // if (i == 0) {
-            //     Gizmos.color = Color.red;
-            //     i += 1;
-            // }
-
             if (node == m_Grid.GetSelectedNode())
-            // Important to be all the color assignments 
             {
                 Color currentColor = Gizmos.color;
                 Gizmos.color = new Color(currentColor.r, currentColor.g, currentColor.b, 0.5f);
             }
-
             Gizmos.DrawSphere(node.Position, 0.2f*m_NodeSize);
         }
     }
@@ -360,7 +287,6 @@ public class GridHolder: MonoBehaviour
         int x = AssamPosition.x;
         int y = AssamPosition.y;
 
-        // Debug.Log($"Assam position: {x}, {y}");
         switch (direction)
         {
             case Direction.Up:

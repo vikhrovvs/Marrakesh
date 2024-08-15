@@ -1,12 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 
 public class Game : MonoBehaviourPunCallbacks
@@ -246,6 +244,8 @@ public class Game : MonoBehaviourPunCallbacks
     {
         List<int> monetCount = m_Players.GetMoneyValues();
         List<int> activeCarpetCount = m_GridHolder.CountColors();
+        Debug.Log($"Money count: {monetCount}");
+        Debug.Log($"Active carpet count: {activeCarpetCount}");
 
         int maxIndex = 0;
         int maxValue = monetCount[0] + activeCarpetCount[0];
@@ -268,9 +268,5 @@ public class Game : MonoBehaviourPunCallbacks
         PlayerUIParent.SetActive(false);
         m_GameFinishUI.SetActive(true);
         m_GameFinishedText.text = $"Game finished!\nWinner: {maxIndex}";
-
-        // count money
-        // count carpets
-        // choose winner
     }
 }
