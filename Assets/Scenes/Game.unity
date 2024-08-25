@@ -2728,8 +2728,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 196130084}
-        m_TargetAssemblyTypeName: Game, Assembly-CSharp
+      - m_Target: {fileID: 121684992}
+        m_TargetAssemblyTypeName: TurnManager, Assembly-CSharp
         m_MethodName: ChangeOrientation
         m_Mode: 1
         m_Arguments:

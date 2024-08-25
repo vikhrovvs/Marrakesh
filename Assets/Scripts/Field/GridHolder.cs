@@ -76,6 +76,11 @@ public class GridHolder: MonoBehaviour
         m_Grid.ChangeOrientation();
     }
 
+    public Orientation GetOrientation()
+    {
+        return m_Grid.GetOrientation();
+    }
+
     
     private void OnValidate()
     {

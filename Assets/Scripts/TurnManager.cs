@@ -234,7 +234,6 @@ public class TurnManager : MonoBehaviourPunCallbacks
 
     public void ChangeOrientation()
     {
-        // m_Game.ChangeOrientation();
         m_Game.photonView.RPC("ChangeOrientation", RpcTarget.All);
     }
 
@@ -270,6 +269,7 @@ public class TurnManager : MonoBehaviourPunCallbacks
         m_Game.photonView.RPC("SpawnCarpet", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber,
             firstNodeX, firstNodeY, secondNodeX, secondNodeY);
     }
+
 
     private void ShowIncorrectCarpetPlacementMessage()
     {
